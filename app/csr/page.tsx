@@ -17,9 +17,9 @@ export default function CSRPage() {
       <p>This page runs on the client and updates the time every second.</p>
       <p>
         Client time: <strong>{time}</strong>
-        <span>Checking re-building</span>
-      </p>
-      <p>
+      <p/>
+      <p> it was generated on the client.</p>
+
         <Link href="/">Back to Control Panel</Link>
       </p>
     </main>
