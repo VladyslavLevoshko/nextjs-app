@@ -8,7 +8,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div> smth </div>
         {children}
       </body>
     </html>
