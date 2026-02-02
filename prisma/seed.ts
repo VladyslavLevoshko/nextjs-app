@@ -18,13 +18,13 @@ const userData: Prisma.UserCreateInput[] = [
     posts: {
       create: [
         {
-          title: "Join the Prisma Discord",
-          content: "https://pris.ly/discord",
+          title: "First post",
+          content: "This is first post",
           published: true,
         },
         {
-          title: "Prisma on YouTube",
-          content: "https://pris.ly/youtube",
+          title: "Second post",
+          content: "something else interesting",
         },
       ],
     },
@@ -35,8 +35,8 @@ const userData: Prisma.UserCreateInput[] = [
     posts: {
       create: [
         {
-          title: "Follow Prisma on Twitter",
-          content: "https://www.twitter.com/prisma",
+          title: "Third post",
+          content: "and one more post",
           published: true,
         },
       ],
