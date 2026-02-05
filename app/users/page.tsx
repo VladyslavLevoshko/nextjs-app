@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import Link from "next/link";
 
 export default async function UsersPage() {
    const users = await prisma.user.findMany();
@@ -10,7 +11,9 @@ export default async function UsersPage() {
       <ol className="list-decimal list-inside font-[family-name:var(--font-geist-sans)]">
         {users.map((user) => (
           <li key={user.id} className="mb-2">
-            {user.name}
+            <Link href={`/users/${user.id}`} className="text-blue-600 hover:underline">
+              {user.name || user.email}
+            </Link>
           </li>
         ))}
       </ol>
