@@ -9,7 +9,8 @@ export default function SignInPage() {
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    await signIn("credentials", { redirect: true, email, password, callbackUrl: "/" });
+    const res = await signIn("credentials", { redirect: false, email, password, callbackUrl: "/" });
+    console.log("signIn result :", res);
   }
 
   return (

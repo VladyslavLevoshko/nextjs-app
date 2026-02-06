@@ -2,10 +2,23 @@ import Form from "next/form";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 
 export default function NewPost() {
   async function createPost(formData: FormData) {
     "use server";
+
+     const session = await getServerSession(authOptions);
+    if (!session || !(session.user as any)?.id) {
+      // not authenticated — redirect to sign in
+      redirect("/users/sign_in");
+    }
+
+    const userId = Number((session.user as any).id);
+    if (Number.isNaN(userId)) {
+      redirect("/users/sign_in");
+    }
 
     const title = formData.get("title") as string;
     const content = formData.get("content") as string;
@@ -14,7 +27,7 @@ export default function NewPost() {
       data: {
         title,
         content,
-        author: { connect: { id: 13 } }, // Assuming author with ID 20 exists
+        author: { connect: { id: userId } }, // Assuming author with ID 20 exists
       },
     });
 
