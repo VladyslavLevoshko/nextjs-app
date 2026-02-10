@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import Link from "next/link";
 
 export default async function Posts() {
   const posts = await prisma.post.findMany({
@@ -15,10 +16,17 @@ export default async function Posts() {
       <ul className="font-[family-name:var(--font-geist-sans)] max-w-2xl space-y-4">
         {posts.map((post) => (
           <li key={post.id}>
-            <span className="font-semibold">{post.title}</span>
-            <span className="text-sm text-gray-600 ml-2">
-              by {post.author.name}
-            </span>
+            <Link href={`/posts/${post.id}`} className="text-xl font-semibold text-blue-600 hover:underline">
+              {post.title}
+            </Link>
+
+            {post.author ? (
+              <Link href={`/users/${post.author.id}`} className="text-sm text-gray-600 ml-2">
+                by {post.author.name}
+              </Link>
+            ) : (
+              <span className="text-sm text-gray-600 ml-2">by Unknown</span>
+            )}
           </li>
         ))}
       </ul>
