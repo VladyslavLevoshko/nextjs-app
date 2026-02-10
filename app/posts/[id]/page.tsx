@@ -4,6 +4,7 @@ import Link from "next/link";
 import DeleteButton from "./Delete.Button";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import BuyButton from "./BuyButton";
 
 
 export default async function Post({ params }: { params: Promise<{ id: string }> }) {
@@ -29,6 +30,12 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
               Edit
             </Link>
             <DeleteButton id={post.id} />
+          </div>
+        )}
+
+        {!isOwner && (
+          <div className="flex gap-3 justify-center mb-4">
+            <BuyButton postId={post.id} title={post.title} price={5} />
           </div>
         )}
 
