@@ -10,7 +10,8 @@ type Props = {
 };
 
 export default async function PostsPage({ searchParams }: Props) {
-  const page = Math.max(1, Number(searchParams?.page ?? 1));
+  const sp = (await searchParams) ?? {};
+  const page = Math.max(1, Number(sp.page ?? 1));
   const perPage = 12;
   const skip = (page - 1) * perPage;
 

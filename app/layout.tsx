@@ -1,84 +1,68 @@
-// ...existing code...
 import "./globals.css";
 import Link from "next/link";
 
-// ...existing code...
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export const metadata = {
+  title: "WD1 — Платформа постов",
+  description: "Купля/продажа постов, профиль автора и удобное чтение",
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-gray-50 text-gray-900">
-        <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200">
+    <html lang="ru">
+      <body className="bg-gray-50 text-gray-900 antialiased">
+        <header className="bg-white border-b border-gray-100 sticky top-0 z-40">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
-              <nav aria-label="Main navigation">
-                <ul className="flex items-center gap-2">
-                  <li>
-                    <Link
-                      href="/"
-                      className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
-                    >
-                      Home
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/users"
-                      className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
-                    >
-                      Users
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/posts"
-                      className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
-                    >
-                      Posts
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/posts/new"
-                      className="px-3 py-2 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition"
-                    >
-                      New Post
-                    </Link>
-                  </li>
-                </ul>
-              </nav>
+              <Link href="/" className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-indigo-600 to-indigo-500 text-white flex items-center justify-center font-bold">
+                  WD
+                </div>
+                <div className="hidden sm:block">
+                  <div className="text-sm font-semibold">WD1</div>
+                  <div className="text-xs text-gray-500">Платформа постов</div>
+                </div>
+              </Link>
 
-              <nav aria-label="Auth">
-                <ul className="flex items-center gap-2">
-                  <li>
-                    <Link
-                      href="/users/new_user"
-                      className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
-                    >
-                      Register
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/users/sign_in"
-                      className="px-3 py-2 rounded-md text-sm font-medium text-indigo-600 border border-indigo-600 hover:bg-indigo-50 transition"
-                    >
-                      Sign in
-                    </Link>
-                  </li>
-                </ul>
+              <nav className="flex items-center gap-3">
+                <Link href="/posts" className="text-sm text-gray-700 hover:text-indigo-600">
+                  Посты
+                </Link>
+                <Link href="/users" className="text-sm text-gray-700 hover:text-indigo-600">
+                  Пользователи
+                </Link>
+                <Link
+                  href="/posts/new"
+                  className="hidden sm:inline-flex items-center px-3 py-1.5 rounded-md bg-gradient-to-r from-indigo-600 to-indigo-500 text-white text-sm"
+                >
+                  Новый пост
+                </Link>
+                <Link href="/users/sign_in" className="ml-2 text-sm text-indigo-600 hover:underline">
+                  Войти
+                </Link>
               </nav>
             </div>
           </div>
         </header>
 
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* отступ сверху равный высоте header, чтобы контент не перекрывался */}
+        <main className="pt-16">
           {children}
         </main>
+
+        <footer className="mt-16 border-t border-gray-100 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between text-sm text-gray-600">
+            <div>© {new Date().getFullYear()} WD1 — Все права защищены</div>
+            <div className="flex items-center gap-4">
+              <Link href="/privacy" className="hover:underline">
+                Политика конфиденциальности
+              </Link>
+              <Link href="/terms" className="hover:underline">
+                Условия
+              </Link>
+            </div>
+          </div>
+        </footer>
       </body>
     </html>
   );
-};
+}
