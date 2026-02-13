@@ -1,3 +1,4 @@
+// ...existing code...
 import Form from "next/form";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
@@ -9,9 +10,8 @@ export default function NewPost() {
   async function createPost(formData: FormData) {
     "use server";
 
-     const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions);
     if (!session || !(session.user as any)?.id) {
-      // not authenticated — redirect to sign in
       redirect("/users/sign_in");
     }
 
@@ -20,14 +20,28 @@ export default function NewPost() {
       redirect("/users/sign_in");
     }
 
-    const title = formData.get("title") as string;
-    const content = formData.get("content") as string;
+    const title = (formData.get("title") as string) || "";
+    const content = (formData.get("content") as string) || "";
+    const priceRaw = formData.get("price");
+    // parse price as number (allow decimals)
+    let price = 0;
+    if (priceRaw != null) {
+      const parsed = Number(String(priceRaw).trim());
+      price = Number.isFinite(parsed) && !Number.isNaN(parsed) ? parsed : 0;
+    }
+
+    // basic validation (can be extended)
+    if (!title.trim()) {
+      // throw or handle validation as needed — simple redirect back for now
+      redirect("/posts/new");
+    }
 
     await prisma.post.create({
       data: {
         title,
         content,
-        author: { connect: { id: userId } }, // Assuming author with ID 20 exists
+        price, // saves price to DB (ensure prisma schema has `price` field)
+        author: { connect: { id: userId } },
       },
     });
 
@@ -36,40 +50,65 @@ export default function NewPost() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">Create New Post</h1>
-      <Form action={createPost} className="space-y-6">
+    <div className="max-w-2xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">Создать новый пост</h1>
+      <Form action={createPost} className="space-y-6 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
         <div>
-          <label htmlFor="title" className="block text-lg mb-2">
-            Title
+          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+            Заголовок
           </label>
           <input
             type="text"
             id="title"
             name="title"
-            placeholder="Enter your post title"
-            className="w-full px-4 py-2 border rounded-lg"
+            placeholder="Введите заголовок"
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            required
           />
         </div>
+
         <div>
-          <label htmlFor="content" className="block text-lg mb-2">
-            Content
+          <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
+            Содержимое
           </label>
           <textarea
             id="content"
             name="content"
-            placeholder="Write your post content here..."
-            rows={6}
-            className="w-full px-4 py-2 border rounded-lg"
+            placeholder="Напишите содержимое поста..."
+            rows={8}
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
           />
         </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600"
-        >
-          Create Post
-        </button>
+
+        <div>
+          <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-2">
+            Цена
+          </label>
+          <div className="relative">
+            <input
+              id="price"
+              name="price"
+              type="number"
+              step="0.01"
+              min="0"
+              placeholder="0.00"
+              className="w-full pr-20 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            />
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-600">$</span>
+          </div>
+          <p className="mt-1 text-xs text-gray-500">Оставьте 0 для бесплатного поста.</p>
+        </div>
+
+        <div>
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-indigo-600 to-indigo-500 text-white py-3 rounded-lg hover:opacity-95 transition"
+          >
+            Создать пост
+          </button>
+        </div>
       </Form>
     </div>
   );
 }
+// ...existing code...
