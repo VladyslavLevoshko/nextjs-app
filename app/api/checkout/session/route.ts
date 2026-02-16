@@ -8,6 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    console.log("checkout session body:", body); // <-- debug
     const { postId, title, amount, buyerEmail } = body;
 
     if (!postId || !amount) {

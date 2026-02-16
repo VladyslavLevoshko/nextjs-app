@@ -1,6 +1,7 @@
 // ...existing code...
 "use client";
 import Link from "next/link";
+import BuyButton from "./[id]/BuyButton";
 
 export default function PostCard({
   id,
@@ -8,7 +9,7 @@ export default function PostCard({
   price,
   authorName,
 }: {
-  id: string;
+  id: number;
   title: string;
   price: number;
   authorName: string;
@@ -38,12 +39,7 @@ export default function PostCard({
             >
               Открыть
             </Link>
-            <Link
-              href={`/posts/${id}/buy`}
-              className="px-3 py-1.5 rounded-md border border-gray-200 text-sm text-gray-700 hover:bg-gray-50"
-            >
-              Купить
-            </Link>
+            <BuyButton postId={id} title={title} price={price} />
           </div>
         </div>
       </div>

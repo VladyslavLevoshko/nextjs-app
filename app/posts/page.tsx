@@ -43,7 +43,7 @@ export default async function PostsPage({ searchParams }: Props) {
           {posts.map((p) => (
             <PostCard
               key={p.id}
-              id={String(p.id)}
+              id={p.id}
               title={p.title}
               price={p.price ?? 0}
               authorName={p.author?.name ?? "Автор"}
