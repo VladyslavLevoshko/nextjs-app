@@ -7,7 +7,7 @@ import type { JWT } from "next-auth/jwt";
 import type { Session } from "next-auth";
 import type { AuthOptions } from "next-auth";
 
-const SESSION_MAX_AGE = 60 // seconds (currently 1 hour)
+const SESSION_MAX_AGE = 60*60*60 // seconds (currently 1 hour)
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),

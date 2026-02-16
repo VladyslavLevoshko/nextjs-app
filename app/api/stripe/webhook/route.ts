@@ -1,14 +1,13 @@
 // ...existing code...
 import Stripe from "stripe";
-import { PrismaClient } from "../../../generated/prisma/client";
 import prisma from "@/lib/prisma";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(request: Request) {
   const sig = request.headers.get("stripe-signature") || "";
-  const buf = Buffer.from(await request.arrayBuffer());
 
+  const buf = Buffer.from(await request.arrayBuffer());
   let event: Stripe.Event;
   try {
     event = stripe.webhooks.constructEvent(buf, sig, process.env.STRIPE_WEBHOOK_SECRET!);
@@ -21,6 +20,9 @@ export async function POST(request: Request) {
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
       const postIdStr = session.metadata?.postId;
+      const userIdStr = session.metadata?.userId;
+      const userId = Number(userIdStr);
+      console.log("user id from metadata:", userId);
       const buyerEmail = session.customer_email ?? session.customer_details?.email;
 
       if (!postIdStr) {
@@ -38,8 +40,8 @@ export async function POST(request: Request) {
         return new Response(JSON.stringify({ received: true }), { status: 200 });
       }
 
-      // Найти или создать пользователя по email
-      let user = await prisma.user.findUnique({ where: { email: buyerEmail } });
+      // Найти или создать пользователя
+      let user = await prisma.user.findUnique({ where: { id: userId } });
       if (!user) {
         const defaultName = buyerEmail.split("@")[0];
         user = await prisma.user.create({
@@ -57,13 +59,12 @@ export async function POST(request: Request) {
         console.warn("Webhook: post not found", postId);
         return new Response(JSON.stringify({ received: true }), { status: 200 });
       }
-
       await prisma.post.update({
         where: { id: postId },
-        data: { authorId: user.id },
+        data: { authorId: userId },
       });
 
-      console.log(`Post ${postId} transferred to user ${user.id} (${buyerEmail})`);
+      console.log(`Post ${postId} transferred to user ${userId} (${buyerEmail})`);
     }
 
     return new Response(JSON.stringify({ received: true }), { status: 200 });

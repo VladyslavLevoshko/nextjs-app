@@ -14,8 +14,13 @@ function formatCurrency(value?: number) {
 
 export default async function Post({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  const postId = Number.parseInt(String(id), 10);
+
+  if (!Number.isFinite(postId) || Number.isNaN(postId)) {
+    return notFound();
+  }  
   const post = await prisma.post.findUnique({
-    where: { id: parseInt(id, 10) },
+    where: { id: postId },
     include: { author: true },
   });
 
@@ -60,7 +65,7 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
                     <DeleteButton id={post.id} />
                   </>
                 ) : (
-                  <BuyButton postId={post.id} title={post.title} price={post.price ?? 0} />
+                  <BuyButton postId={post.id} title={post.title} price={post.price ?? 5} />
                 )}
               </div>
             </div>
