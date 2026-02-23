@@ -1,5 +1,6 @@
 import "./globals.css";
 import Link from "next/link";
+import SignInButton from "./SignInButton";
 
 export const metadata = {
   title: "WD1 — Платформа постов",
@@ -36,9 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 >
                   Новый пост
                 </Link>
-                <Link href="/users/sign_in" className="ml-2 text-sm text-indigo-600 hover:underline">
-                  Войти
-                </Link>
+                <SignInButton />
               </nav>
             </div>
           </div>

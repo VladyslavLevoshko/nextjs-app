@@ -89,12 +89,13 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
                 >
                   Все посты
                 </Link>
+                {!isOwner ? (
                 <a
                   href={`mailto:${post.author?.email ?? ""}`}
                   className="px-3 py-2 rounded-md bg-indigo-600 text-white text-sm hover:opacity-95"
                 >
                   Написать автору
-                </a>
+                </a>) : (null)}
               </div>
             </footer>
           </div>

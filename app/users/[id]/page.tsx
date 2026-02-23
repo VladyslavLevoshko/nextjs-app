@@ -48,7 +48,7 @@ export default async function UserPage({ params }: { params: Promise<{ id: strin
             {posts.map((p) => (
               <PostCard
                 key={p.id}
-                id={String(p.id)}
+                id={p.id}
                 title={p.title}
                 price={p.price ?? 0}
                 authorName={p.author?.name ?? "Автор"}
