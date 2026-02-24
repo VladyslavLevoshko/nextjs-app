@@ -32,6 +32,9 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
   const createdAt = (post as any).createdAt ? new Date((post as any).createdAt) : null;
   const dateLabel = createdAt ? createdAt.toLocaleDateString("ru-RU", { year: "numeric", month: "long", day: "numeric" }) : "";
 
+  const authorId = post.author?.id;
+  const authorHref = authorId ? `/users/${authorId}` : "#";
+
   return (
     <div className="min-h-screen bg-gray-50 -mt-16 py-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -41,13 +44,19 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
               <div>
                 <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight">{post.title}</h1>
                 <div className="mt-4 flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-semibold">
-                    {post.author?.name?.[0] ?? (post.author?.email?.[0] ?? "U")}
-                  </div>
-                  <div className="text-xs">
-                    <div className="font-medium text-gray-900">{post.author?.name ?? post.author?.email ?? "Unknown"}</div>
-                    <div className="text-gray-500">{dateLabel}</div>
-                  </div>
+                  <Link
+                    href={authorHref}
+                    className="flex items-center gap-3 group hover:text-indigo-600 transition-colors"
+                    aria-label={`Перейти к автору ${post.author?.name ?? ""}`}
+                  >
+                    <div className="h-10 w-10 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-semibold transform transition-transform duration-150 ease-out group-hover:scale-110 cursor-pointer">
+                      {post.author?.name?.[0] ?? (post.author?.email?.[0] ?? "U")}
+                    </div>
+                    <div className="text-xs">
+                      <div className="font-medium text-gray-900 group-hover:underline">{post.author?.name ?? post.author?.email ?? "Unknown"}</div>
+                      <div className="text-gray-500">{dateLabel}</div>
+                    </div>
+                  </Link>
                 </div>
               </div>
 
@@ -59,7 +68,7 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
 
                 {isOwner ? (
                   <>
-                    <Link href={`/posts/${post.id}/edit`} className="px-4 py-2 bg-yellow-400 text-white rounded-md hover:opacity-95">
+                    <Link href={`/posts/${post.id}/edit`} className="px-4 py-2 bg-yellow-400 text-white rounded shadow-sm transform transition duration-150 ease-out hover:bg-yellow-500 hover:scale-105 active:scale-100 focus:outline-none focus:ring-2 focus:ring-yellow-200 cursor-pointer">
                       Edit
                     </Link>
                     <DeleteButton id={post.id} />
@@ -85,7 +94,8 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
               <div className="flex items-center gap-3">
                 <Link
                   href={`/posts`}
-                  className="px-3 py-2 rounded-md bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 text-sm"
+                  className="px-3 py-2 bg-white border border-indigo-200 text-indigo-600 rounded shadow-sm transition-colors transition-shadow duration-150
+                            hover:bg-indigo-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-100 cursor-pointer text-sm"
                 >
                   Все посты
                 </Link>

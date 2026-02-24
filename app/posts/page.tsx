@@ -46,6 +46,7 @@ export default async function PostsPage({ searchParams }: Props) {
               id={p.id}
               title={p.title}
               price={p.price ?? 0}
+              authorId={p.author?.id}
               authorName={p.author?.name ?? "Автор"}
             />
           ))}

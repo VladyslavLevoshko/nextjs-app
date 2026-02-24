@@ -36,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   </Link>
                   <Link
                     href="/posts/new"
-                    className="hidden sm:inline-flex items-center px-3 py-1.5 rounded-md bg-gradient-to-r from-indigo-600 to-indigo-500 text-white text-sm"
+                    className="hidden sm:inline-flex items-center px-3 py-1.5 rounded-md bg-gradient-to-r from-indigo-600 to-indigo-500 text-white text-sm hover:opacity-95"
                   >
                     Новый пост
                   </Link>

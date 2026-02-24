@@ -24,8 +24,10 @@ export default function DeleteButton({ id }: { id: number }) {
     <button
       onClick={handleDelete}
       disabled={loading}
-      className="px-4 py-2 bg-red-600 text-white rounded hover:opacity-90 disabled:opacity-60"
-    >
+      className="px-4 py-2 bg-red-600 text-white rounded shadow-sm transform transition duration-150 ease-out
+      hover:bg-red-700 hover:scale-105 active:scale-100 focus:outline-none focus:ring-2 focus:ring-red-300
+      cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
+      >
       {loading ? "Deleting..." : "Delete"}
     </button>
   );

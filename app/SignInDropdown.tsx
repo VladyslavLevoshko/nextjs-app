@@ -43,7 +43,9 @@ export default function SignInDropdown() {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen((s) => !s)}
-        className="inline-flex items-center gap-3 px-3 py-1.5 rounded-md bg-white border border-gray-200 text-sm shadow-sm hover:shadow transition"
+        className="inline-flex items-center gap-3 px-3 py-1.5 rounded-md bg-white border border-gray-200 text-sm shadow-sm
+             transform transition duration-150 ease-out hover:shadow-md hover:bg-gray-50
+             focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300 cursor-pointer"
         aria-haspopup="menu"
         aria-expanded={open}
       >

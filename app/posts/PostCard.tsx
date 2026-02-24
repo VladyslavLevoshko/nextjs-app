@@ -8,14 +8,18 @@ export default function PostCard({
   title,
   price,
   authorName,
+  authorId,
 }: {
   id: number;
   title: string;
   price: number;
   authorName: string;
+  authorId?: number;
 }) {
+  console.log("Author ID:", authorId);
+
   return (
-    <article className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition">
+    <article className="group bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition">
       <div className="p-4">
         <div className="flex items-start justify-between">
           <h3 className="text-lg font-semibold text-gray-800 line-clamp-2">{title}</h3>
@@ -23,14 +27,20 @@ export default function PostCard({
         </div>
 
         <div className="mt-4 flex items-center justify-between text-xs text-gray-500">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center font-semibold">
+          {/* ссылка на страницу автора */}
+          <Link
+            href={authorId ? `/users/${authorId}` : "#"}
+            className="flex items-center gap-2 group-hover:text-indigo-600 transition-colors"
+          >
+            <div className="h-8 w-8 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center font-semibold transform transition-transform duration-150 group-hover:scale-110">
               {authorName?.[0] ?? "A"}
             </div>
             <div>
-              <div className="text-xs font-medium text-gray-800">{authorName}</div>
+              <div className="text-xs font-medium text-gray-800 hover:underline">
+                {authorName}
+              </div>
             </div>
-          </div>
+          </Link>
 
           <div className="flex items-center gap-2">
             <Link

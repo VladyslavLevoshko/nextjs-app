@@ -1,4 +1,3 @@
-// ...existing code...
 import Form from "next/form";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
@@ -23,34 +22,34 @@ export default function NewPost() {
     const title = (formData.get("title") as string) || "";
     const content = (formData.get("content") as string) || "";
     const priceRaw = formData.get("price");
-    // parse price as number (allow decimals)
     let price = 0;
     if (priceRaw != null) {
       const parsed = Number(String(priceRaw).trim());
       price = Number.isFinite(parsed) && !Number.isNaN(parsed) ? parsed : 0;
     }
 
-    // basic validation (can be extended)
+    const category = ((formData.get("category") as string) || "").trim();
+
     if (!title.trim()) {
-      // throw or handle validation as needed — simple redirect back for now
       redirect("/posts/new");
     }
 
-    await prisma.post.create({
-      data: {
-        title,
-        content,
-        price, // saves price to DB (ensure prisma schema has `price` field)
-        author: { connect: { id: userId } },
-      },
-    });
+    const data: any = {
+      title,
+      content,
+      price,
+      author: { connect: { id: userId } },
+    };
+    if (category) data.category = category;
+
+    await prisma.post.create({ data });
 
     revalidatePath("/posts");
     redirect("/posts");
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="max-w-2xl mx-auto p-6 -mt-8"> {/* уменьшён отступ сверху */}
       <h1 className="text-2xl font-bold mb-6">Создать новый пост</h1>
       <Form action={createPost} className="space-y-6 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
         <div>
@@ -81,6 +80,30 @@ export default function NewPost() {
         </div>
 
         <div>
+          <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
+            Категория
+          </label>
+          <div className="relative">
+            <select
+              id="category"
+              name="category"
+              defaultValue=""
+              className="w-full appearance-none pr-8 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white cursor-pointer"
+            >
+              <option value="" disabled>
+                Выберите категорию
+              </option>
+              <option value="Технологии">Технологии</option>
+              <option value="Дизайн">Дизайн</option>
+              <option value="Бизнес">Бизнес</option>
+              <option value="Личное развитие">Личное развитие</option>
+            </select>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">▾</span>
+          </div>
+          <p className="mt-1 text-xs text-gray-500">Выберите категорию для удобной навигации.</p>
+        </div>
+
+        <div>
           <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-2">
             Цена
           </label>
@@ -102,7 +125,7 @@ export default function NewPost() {
         <div>
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-indigo-600 to-indigo-500 text-white py-3 rounded-lg hover:opacity-95 transition"
+            className="w-full bg-gradient-to-r from-indigo-600 to-indigo-500 text-white py-3 rounded-lg hover:opacity-95 transition cursor-pointer"
           >
             Создать пост
           </button>
@@ -111,4 +134,3 @@ export default function NewPost() {
     </div>
   );
 }
-// ...existing code...
