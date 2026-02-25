@@ -2,11 +2,12 @@
 import PostCard from "./PostCard";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
+import CategoryFilter from "./CategoryFilter";
 
 export const revalidate = 0;
 
 type Props = {
-  searchParams?: { page?: string };
+  searchParams?: { page?: string; category?: string };
 };
 
 export default async function PostsPage({ searchParams }: Props) {
@@ -15,13 +16,17 @@ export default async function PostsPage({ searchParams }: Props) {
   const perPage = 12;
   const skip = (page - 1) * perPage;
 
+  const categoryFilter = sp.category ? String(sp.category) : undefined;
+  const where = categoryFilter ? { category: categoryFilter } : undefined;
+
   const posts = await prisma.post.findMany({
+    where,
     take: perPage,
     skip,
     include: { author: true },
   });
 
-  const total = await prisma.post.count();
+  const total = await prisma.post.count( { where } );
   const totalPages = Math.ceil(total / perPage);
 
   return (
@@ -32,7 +37,8 @@ export default async function PostsPage({ searchParams }: Props) {
             <h1 className="text-3xl font-bold text-gray-900">Посты</h1>
             <p className="text-gray-600 mt-1">Свежие материалы от авторов. Купите и получите полный доступ.</p>
           </div>
-          <div>
+          <div className="flex items-center gap-4">
+            <CategoryFilter current={categoryFilter} />
             <Link href="/posts/new" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-500 text-white">
               Новый пост
             </Link>

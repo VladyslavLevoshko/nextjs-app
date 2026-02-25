@@ -88,7 +88,7 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
             {/* metadata / actions */}
             <footer className="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t border-gray-100 pt-4">
               <div className="text-sm text-gray-600">
-                <div>Автор: {post.author?.name ?? post.author?.email ?? "Unknown"}</div>
+                <div>Категория: {post.category ?? "Unknown"}</div>
               </div>
 
               <div className="flex items-center gap-3">
