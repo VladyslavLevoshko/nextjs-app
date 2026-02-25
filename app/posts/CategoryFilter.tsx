@@ -1,7 +1,7 @@
-// ...new file...
+// ...existing code...
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 const CATEGORIES = ["Технологии", "Дизайн", "Бизнес", "Личное развитие"];
@@ -10,6 +10,24 @@ export default function CategoryFilter({ current }: { current?: string }) {
   const [open, setOpen] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    function onDocClick(e: MouseEvent) {
+      if (!ref.current) return;
+      if (!ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+
+    document.addEventListener("mousedown", onDocClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDocClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, []);
 
   function applyCategory(cat?: string) {
     const params = new URLSearchParams(Array.from(searchParams.entries()));
@@ -26,13 +44,14 @@ export default function CategoryFilter({ current }: { current?: string }) {
   }
 
   return (
-    <div className="relative">
+    <div className="relative" ref={ref}>
       <button
         type="button"
         onClick={() => setOpen((s) => !s)}
         className="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 text-sm rounded-md shadow-sm
-                   transform transition duration-150 ease-out hover:scale-105 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300 cursor-pointer"
+                   transform transition duration-150 ease-out hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300 cursor-pointer"
         aria-expanded={open}
+        aria-haspopup="menu"
       >
         <span className="text-sm text-gray-700">{current ?? "Фильтр"}</span>
         <svg className="w-4 h-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden>

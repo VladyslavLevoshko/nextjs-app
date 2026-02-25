@@ -1,4 +1,5 @@
 import Link from "next/link";
+import PopularCategories from "./PopularCategories";
 
 export const metadata = {
   title: "WD1 — Главная",
@@ -50,11 +51,19 @@ export default function HomePage() {
           <aside className="hidden lg:flex items-center justify-center">
             <div className="w-full max-w-md bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Популярные категории</h3>
+
               <div className="flex flex-wrap gap-2">
-                <span className="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-sm">Технологии</span>
-                <span className="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-sm">Дизайн</span>
-                <span className="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-sm">Бизнес</span>
-                <span className="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-sm">Личное развитие</span>
+                {["Технологии", "Дизайн", "Бизнес", "Личное развитие"].map((c) => (
+                  <Link
+                    key={c}
+                    href={`/posts?category=${encodeURIComponent(c)}`}
+                    className="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-sm shadow-sm
+                              transform transition duration-150 ease-out hover:bg-indigo-100 hover:text-indigo-800
+                              focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-200 cursor-pointer"
+                  >
+                    {c}
+                  </Link>
+                ))}
               </div>
 
               <div className="mt-6 text-sm text-gray-600">

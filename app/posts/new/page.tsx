@@ -39,8 +39,9 @@ export default function NewPost() {
       content,
       price,
       author: { connect: { id: userId } },
+      category
     };
-    if (category) data.category = category;
+    if (!category) data.category = 'Без категории';
 
     await prisma.post.create({ data });
 
