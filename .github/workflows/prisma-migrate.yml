@@ -8,6 +8,10 @@ on:
 jobs:
   migrate:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      PGSSLMODE: require
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,12 +25,7 @@ jobs:
         run: npm ci
 
       - name: Generate Prisma client
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npx prisma generate
 
       - name: Deploy migrations to Supabase
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          PGSSLMODE: require
         run: npx prisma migrate deploy
