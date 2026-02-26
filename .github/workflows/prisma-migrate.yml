@@ -24,8 +24,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Generate Prisma client
-        run: npx prisma generate
+      - name: Generate Prisma client (postgres schema)
+        run: npx prisma generate --schema=prisma/schema.postgres.prisma
 
       - name: Deploy migrations to Supabase
-        run: npx prisma migrate deploy
+        run: npx prisma migrate deploy --schema=prisma/schema.postgres.prisma
