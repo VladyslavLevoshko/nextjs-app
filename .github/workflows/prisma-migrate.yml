@@ -11,15 +11,16 @@ jobs:
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       PGSSLMODE: require
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20.19.0"
+
+      - name: Debug DATABASE_URL presence
+        run: node -e "console.log('present:', !!process.env.DATABASE_URL, 'startsWith:', process.env.DATABASE_URL?.startsWith('postgresql://'))"
 
       - name: Install dependencies
         run: npm ci
