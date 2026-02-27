@@ -19,6 +19,22 @@ jobs:
         with:
           node-version: "20.19.0"
 
+      - name: Debug network to Supabase
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DB_HOST: db.tdxolyglxtqdxlqnxhku.supabase.co   # замените на ваш хост, если другой
+        run: |
+          node -e "
+            const dns = require('dns');
+            const net = require('net');
+            const host = process.env.DB_HOST;
+            dns.resolve4(host, (e,a)=>console.log('A:', e ? e.code : a));
+            dns.resolve6(host, (e,a)=>console.log('AAAA:', e ? e.code : a));
+            const s = net.createConnection({ host, port: 5432, timeout: 5000 }, ()=>{ console.log('TCP: connected'); s.end(); });
+            s.on('error', err => { console.log('TCP error:', err.message); process.exitCode = 2; });
+            setTimeout(()=>{ console.log('TCP: timed out'); process.exitCode = 3; }, 7000);
+          "
+
       - name: Debug DATABASE_URL presence
         run: node -e "console.log('present:', !!process.env.DATABASE_URL, 'startsWith:', process.env.DATABASE_URL?.startsWith('postgresql://'))"
 
