@@ -3,15 +3,13 @@ import PostCard from "./PostCard";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
 import CategoryFilter from "./CategoryFilter";
-import type { Post, User } from "@prisma/client";
 
 export const revalidate = 0;
 
 type Props = {
-  searchParams?: { page?: string; category?: string };
+  searchParams?: { page?: string | string[]; category?: string | string[] };
 };
 
-type PostWithAuthor = Post & { author?: User | null };
 
 export default async function PostsPage({ searchParams }: Props) {
   const sp = (await searchParams) ?? {};
@@ -49,7 +47,7 @@ export default async function PostsPage({ searchParams }: Props) {
         </header>
 
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.map((p: PostWithAuthor) => (
+          {posts.map((p) => (
             <PostCard
               key={p.id}
               id={p.id}
