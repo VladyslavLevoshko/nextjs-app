@@ -3,7 +3,7 @@ import PostCard from "./PostCard";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
 import CategoryFilter from "./CategoryFilter";
-import type { Post, Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
 export const revalidate = 0;
 
