@@ -3,12 +3,17 @@ import PostCard from "./PostCard";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
 import CategoryFilter from "./CategoryFilter";
+import type { Post, Prisma } from "@prisma/client";
 
 export const revalidate = 0;
 
 type Props = {
   searchParams?: { page?: string; category?: string };
 };
+
+type PostWithAuthor = Prisma.PostGetPayload<{
+  include: { author: true };
+}>;
 
 export default async function PostsPage({ searchParams }: Props) {
   const sp = (await searchParams) ?? {};
@@ -46,13 +51,13 @@ export default async function PostsPage({ searchParams }: Props) {
         </header>
 
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.map((p) => (
+          {posts.map((p: PostWithAuthor) => (
             <PostCard
               key={p.id}
               id={p.id}
               title={p.title}
               price={p.price ?? 0}
-              authorId={p.author?.id}
+              authorId={p.authorId ?? undefined}
               authorName={p.author?.name ?? "Автор"}
             />
           ))}
