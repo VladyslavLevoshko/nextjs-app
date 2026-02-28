@@ -46,7 +46,7 @@ export default async function PostsPage({ searchParams }: Props) {
           </div>
         </header>
 
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/*<section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {posts.map((p: any) => (
             <PostCard
               key={p.id}
@@ -57,7 +57,7 @@ export default async function PostsPage({ searchParams }: Props) {
               authorName={p.author?.name ?? "Автор"}
             />
           ))}
-        </section>
+        </section>*/}
 
         <nav className="mt-8 flex items-center justify-between">
           <div className="text-sm text-gray-600">
