@@ -47,7 +47,7 @@ export default async function PostsPage({ searchParams }: Props) {
         </header>
 
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.map((p) => (
+          {posts.map((p: any) => (
             <PostCard
               key={p.id}
               id={p.id}
