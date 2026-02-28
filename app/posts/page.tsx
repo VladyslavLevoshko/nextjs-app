@@ -20,12 +20,12 @@ export default async function PostsPage({ searchParams }: Props) {
   const categoryFilter = sp.category ? String(sp.category) : undefined;
   const where = categoryFilter ? { category: categoryFilter } : undefined;
 
-  const posts = await prisma.post.findMany({
+  const posts = (await prisma.post.findMany({
     where,
     take: perPage,
     skip,
-    include: { author: true },
-  });
+    include: { author: true }
+  }));
 
   const total = await prisma.post.count( { where } );
   const totalPages = Math.ceil(total / perPage);
