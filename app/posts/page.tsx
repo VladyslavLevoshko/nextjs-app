@@ -3,7 +3,7 @@ import PostCard from "./PostCard";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
 import CategoryFilter from "./CategoryFilter";
-import type { Prisma } from "@prisma/client";
+import type { Post, User } from "@prisma/client";
 
 export const revalidate = 0;
 
@@ -11,9 +11,7 @@ type Props = {
   searchParams?: { page?: string; category?: string };
 };
 
-type PostWithAuthor = Prisma.PostGetPayload<{
-  include: { author: true };
-}>;
+type PostWithAuthor = Post & { author?: User | null };
 
 export default async function PostsPage({ searchParams }: Props) {
   const sp = (await searchParams) ?? {};
