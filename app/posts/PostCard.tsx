@@ -16,7 +16,6 @@ export default function PostCard({
   authorName: string;
   authorId?: number;
 }) {
-  console.log("Author ID:", authorId);
 
   return (
     <article className="group bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition">

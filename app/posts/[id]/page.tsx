@@ -27,11 +27,10 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
   if (!post) return notFound();
 
   const session = await getServerSession(authOptions);
-  const isOwner = !!session && String((session.user as any).id) === String(post.authorId);
-
-  const createdAt = (post as any).createdAt ? new Date((post as any).createdAt) : null;
+  const userId = (session?.user as { id?: string } | undefined)?.id;
+  const isOwner = !!userId && String(userId) === String(post.authorId);
+  const createdAt = post.author?.createdAt ? new Date(post.author.createdAt) : null;
   const dateLabel = createdAt ? createdAt.toLocaleDateString("ru-RU", { year: "numeric", month: "long", day: "numeric" }) : "";
-
   const authorId = post.author?.id;
   const authorHref = authorId ? `/users/${authorId}` : "#";
 
