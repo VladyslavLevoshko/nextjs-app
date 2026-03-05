@@ -2,6 +2,7 @@
 // ...existing code...
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 type FormState = {
   name: string;
@@ -35,8 +36,8 @@ export default function RegisterForm() {
     setSuccess(null);
     if (!validate()) return;
     setLoading(true);
+    setErrors({});
     try {
-      // Замените endpoint на ваш реальный API
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -46,15 +47,32 @@ export default function RegisterForm() {
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         setErrors({ form: data?.error || "Ошибка регистрации" });
-        setLoading(false);
         return;
       }
 
-      setSuccess("Регистрация успешна! Перенаправляем...");
-      setLoading(false);
-      setTimeout(() => router.push("/login"), 1400);
+      setSuccess("Регистрация прошла успешно. Автоматический вход...");
+      // Авто-логин через next-auth (credentials provider должен быть настроен)
+      try {
+        const signRes = await signIn("credentials", {
+          redirect: false,
+          email: form.email,
+          password: form.password,
+        });
+
+        if (signRes && (signRes as any).ok) {
+          router.push("/users/success");
+        } else {
+          // если логин не прошёл — редирект на страницу входа
+          router.push("/users/sign_in");
+        }
+      } catch (err) {
+        console.error("Sign-in error", err);
+        router.push("/users/sign_in");
+      }
     } catch (err) {
-      setErrors({ form: "Сетевая ошибка, попробуйте позже" });
+      console.error(err);
+      setErrors({ form: "Сетевая ошибка" });
+    } finally {
       setLoading(false);
     }
   };
@@ -152,7 +170,7 @@ export default function RegisterForm() {
           </button>
 
           <div className="text-center text-sm text-gray-500">
-            Уже есть аккаунт? <a className="text-indigo-600 hover:underline" href="/login">Войти</a>
+            Уже есть аккаунт? <a className="text-indigo-600 hover:underline" href="/users/sign_in">Войти</a>
           </div>
         </form>
       </div>
@@ -164,5 +182,4 @@ export default function RegisterForm() {
       )}
     </div>
   );
-}
-// ...existing code...
+};
