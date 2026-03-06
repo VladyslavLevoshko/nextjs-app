@@ -1,8 +1,9 @@
 import Link from "next/link";
 
-export default function CancelPage({ params }: { params: { id: string } }) {
-  const postId = params?.id ?? "#";
-
+export default async function CancelPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const postId = id ?? "#";
+  
   return (
     <div className="min-h-screen bg-gray-50 -mt-16 py-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">

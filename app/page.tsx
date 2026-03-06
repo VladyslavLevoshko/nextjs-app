@@ -1,5 +1,4 @@
 import Link from "next/link";
-import PopularCategories from "./PopularCategories";
 
 export const metadata = {
   title: "WD1 — Главная",

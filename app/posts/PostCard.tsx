@@ -1,7 +1,7 @@
-// ...existing code...
 "use client";
 import Link from "next/link";
 import BuyButton from "./[id]/BuyButton";
+import { useSession } from "next-auth/react";
 
 export default function PostCard({
   id,
@@ -16,6 +16,9 @@ export default function PostCard({
   authorName: string;
   authorId?: number;
 }) {
+  const { data: session } = useSession();
+  const currentUserId = session?.user?.id;
+  const isOwner = !!currentUserId && authorId !== undefined && String(currentUserId) === String(authorId);
 
   return (
     <article className="group bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition">
@@ -26,7 +29,6 @@ export default function PostCard({
         </div>
 
         <div className="mt-4 flex items-center justify-between text-xs text-gray-500">
-          {/* ссылка на страницу автора */}
           <Link
             href={authorId ? `/users/${authorId}` : "#"}
             className="flex items-center gap-2 group-hover:text-indigo-600 transition-colors"
@@ -48,11 +50,11 @@ export default function PostCard({
             >
               Открыть
             </Link>
-            <BuyButton postId={id} title={title} price={price} />
+
+            {!isOwner && <BuyButton postId={id} title={title} price={price} />}
           </div>
         </div>
       </div>
     </article>
   );
 }
-// ...existing code...
