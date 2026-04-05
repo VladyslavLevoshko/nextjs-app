@@ -1,4 +1,3 @@
-// ...existing code...
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@/lib/prisma";
@@ -7,7 +6,7 @@ import type { JWT } from "next-auth/jwt";
 import type { Session } from "next-auth";
 import type { AuthOptions } from "next-auth";
 
-const SESSION_MAX_AGE = 60*60*60 // seconds (currently 1 hour)
+const SESSION_MAX_AGE = 60*60
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -32,11 +31,9 @@ export const authOptions: AuthOptions = {
   jwt: {
     maxAge: SESSION_MAX_AGE,
   },
-  // ...existing code...
   callbacks: {
     async jwt({ token, user }: { token: JWT; user?: any }) {
       if (user) (token as any).id = (user as any).id ?? token.sub;
-      // убедимся, что есть iat (issued at)
       if (!(token as any).iat) (token as any).iat = Math.floor(Date.now() / 1000);
       return token;
     },
@@ -52,5 +49,4 @@ export const authOptions: AuthOptions = {
       return session;
     },
   },
-// ...existing code...
 };
