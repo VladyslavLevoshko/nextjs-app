@@ -1,12 +1,15 @@
-// ...existing code...
 import "./globals.css";
 import Link from "next/link";
-import SignInButton from "./SignInButton";
-import SessionProviderClient from "./providers/SessionProviderClient"; // added
+import SessionProviderClient from "./providers/SessionProviderClient";
+import SignInDropdown from "./SignInDropdown";
+import { Metadata } from "next";
 
-export const metadata = {
-  title: "WD1 — Платформа постов",
-  description: "Купля/продажа постов, профиль автора и удобное чтение",
+export const metadata: Metadata = {
+  title: {
+    default: "WD1",
+    template: "%s | WD1",
+  },
+  description: "Platform for creating, buying, and managing posts.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -40,13 +43,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   >
                     Новый пост
                   </Link>
-                  <SignInButton />
+                  <SignInDropdown/>
                 </nav>
               </div>
             </div>
           </header>
 
-          {/* отступ сверху равный высоте header, чтобы контент не перекрывался */}
           <main className="pt-16">{children}</main>
 
           <footer className="mt-16 border-t border-gray-100 bg-white">
@@ -66,5 +68,4 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </body>
     </html>
   );
-}
-// ...existing code...
+};

@@ -40,3 +40,21 @@ export function validateRegisterRequest(data: unknown):data is RegisterRequest {
     return true;
     
 };
+
+export interface PatchRequest {
+    title?: string;
+    content?: string;
+};
+
+export function validatePatchBody(data: unknown) : data is PatchRequest {
+    if(typeof data !== "object" || data === null || Array.isArray(data)) {
+         return false;
+    };
+
+    const obj = data as Record<string, unknown>;
+
+    const titleOk = ("title" in obj) && typeof obj.title === "string" && obj.title.trim().length > 0;
+    const contentOk = ("content" in obj) && typeof obj.content === "string" && obj.content.trim().length > 0;
+
+    return titleOk || contentOk;
+};

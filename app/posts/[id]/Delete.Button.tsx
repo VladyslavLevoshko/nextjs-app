@@ -12,7 +12,6 @@ export default function DeleteButton({ id }: { id: number }) {
     const res = await fetch(`/api/posts/${id}`, { method: "DELETE" });
     setLoading(false);
     if (res.ok) {
-      // navigate after delete
       router.push("/posts");
     } else {
       alert("Failed to delete post");

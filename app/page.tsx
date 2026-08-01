@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { PostCategories } from "@/types/PostsCategories";
+import { Metadata } from "next";
 
-export const metadata = {
-  title: "WD1 — Главная",
-  description: "Купля/продажа постов. Находите полезные материалы и поддерживайте авторов.",
+export const metadata:Metadata = {
+  title: "Main Page"
 };
 
 export default function HomePage() {
@@ -52,15 +53,15 @@ export default function HomePage() {
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Популярные категории</h3>
 
               <div className="flex flex-wrap gap-2">
-                {["Технологии", "Дизайн", "Бизнес", "Личное развитие"].map((c) => (
+                {PostCategories.map((category) => (
                   <Link
-                    key={c}
-                    href={`/posts?category=${encodeURIComponent(c)}`}
+                    key={category.label}
+                    href={`/posts?category=${encodeURIComponent(category.label)}`}
                     className="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-sm shadow-sm
                               transform transition duration-150 ease-out hover:bg-indigo-100 hover:text-indigo-800
                               focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-200 cursor-pointer"
                   >
-                    {c}
+                    {category.label}
                   </Link>
                 ))}
               </div>

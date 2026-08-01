@@ -1,6 +1,4 @@
-// ...existing code...
 "use client";
-
 import { useState, useRef, useEffect } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
