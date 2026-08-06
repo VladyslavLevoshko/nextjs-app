@@ -1,15 +1,16 @@
 import Logo from "./Logo";
 import Navigation from "./Navigation";
+import { Container } from "../SharedComponents/PageLayouts";
 
 export default function Header(){
     return (
           <header className="bg-white border-b border-gray-100 sticky top-0 z-40">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <Container>
               <div className="flex items-center justify-between h-16">
                 <Logo/>
                 <Navigation/>
               </div>
-            </div>
+            </Container>
           </header>
     )
 }

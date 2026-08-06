@@ -1,20 +1,21 @@
-import Link from "next/link";
 import SignInDropdown from "./SignInDropdown";
+import { NavigationButton } from "../SharedComponents/NavigationButton";
+
 export default function Navigation(){
     return (
         <nav className="flex items-center gap-3">
-            <Link href="/posts" className="text-sm text-gray-700 hover:text-indigo-600">
+            <NavigationButton href="/posts" color = "white">
                 Посты
-            </Link>
-            <Link href="/users" className="text-sm text-gray-700 hover:text-indigo-600">
+            </NavigationButton>
+
+            <NavigationButton href="/users" color = "white">
                 Пользователи
-            </Link>
-            <Link
-                href="/posts/new"
-                className="hidden sm:inline-flex items-center px-3 py-1.5 rounded-md bg-gradient-to-r from-indigo-600 to-indigo-500 text-white text-sm hover:opacity-95"
-            >
+            </NavigationButton>
+
+            <NavigationButton href="/posts/new" color="blue">
                 Новый пост
-            </Link>
+            </NavigationButton>
+
             <SignInDropdown/>
         </nav>
     )

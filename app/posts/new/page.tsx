@@ -50,7 +50,7 @@ export default function NewPost() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6 -mt-8"> {/* уменьшён отступ сверху */}
+    <div className="max-w-2xl mx-auto p-6 -mt-8">
       <h1 className="text-2xl font-bold mb-6">Создать новый пост</h1>
       <Form action={createPost} className="space-y-6 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
         <div>

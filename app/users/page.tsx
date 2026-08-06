@@ -2,6 +2,7 @@
 import UserCard from "./UserCard";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
+import { HeroLayout, Container } from "../SharedComponents/PageLayouts";
 
 export const revalidate = 0;
 
@@ -23,8 +24,8 @@ const users = await prisma.user.findMany({
 const total = await prisma.user.count();
 const totalPages = Math.ceil(total / perPage);
   return (
-    <div className="min-h-screen bg-gray-50 -mt-16 py-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <HeroLayout className="bg-gray-50 py-10">
+      <Container>
         <header className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Пользователи</h1>
@@ -67,8 +68,8 @@ const totalPages = Math.ceil(total / perPage);
             )}
           </div>
         </nav>
-      </div>
-    </div>
+      </Container>
+    </HeroLayout>
   );
 }
 // ...existing code...
