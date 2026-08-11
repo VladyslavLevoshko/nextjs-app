@@ -5,8 +5,8 @@ import { authOptions } from "@/lib/auth";
 
 import { validatePatchBody } from "@/types/registerTypes";
 
-export async function DELETE(_request: Request, { params }: { params: { id: string } }) {
-  const postId = Number(params.id);
+export async function DELETE(_request: Request, { params }: { params: Promise <{ id: string }> }) {
+  const postId = Number((await params).id)
   if (Number.isNaN(postId)) return NextResponse.json({ error: "Invalid id" }, { status: 400 });
 
   const session = await getServerSession(authOptions);
@@ -23,8 +23,8 @@ export async function DELETE(_request: Request, { params }: { params: { id: stri
   return NextResponse.json({ ok: true });
 }
 
-export async function PATCH(request: Request, { params }: { params:{ id: string } }) {
-  const { id } = params;
+export async function PATCH(request: Request, { params }: { params:Promise < { id: string } > }) {
+  const { id } = await params;
   const postId = parseInt(id, 10);
   if (Number.isNaN(postId)) return NextResponse.json({ error: "Invalid id" }, { status: 400 });
 

@@ -1,4 +1,4 @@
-export default function FeaturesSection(){
+export function FeaturesSection(){
     return(
         <div className="mt-8 text-sm text-gray-500 space-y-2 max-w-prose">
           <p className="font-medium">Почему WD1</p>

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 
-export default function WatchPostsButton(){
+export function WatchPostsButton(){
     return (
         <Link
            href="/posts"

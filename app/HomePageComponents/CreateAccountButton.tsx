@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-export default function() {
+export function CreateAccountButton() {
     return (
         <Link
             href="/users/new_user"

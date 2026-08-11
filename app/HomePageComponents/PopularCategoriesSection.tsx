@@ -1,6 +1,6 @@
 import CategoryLinks from "./CategoryLinks";
 
-export default function PopularCategoriesSection(){
+export function PopularCategoriesSection(){
     return (
         <div className="w-full max-w-md bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
             <h3 className="text-lg font-semibold text-gray-900 mb-3">Популярные категории</h3>
