@@ -1,22 +1,26 @@
-Кратко  
-wd1 — учебный проект, созданный для демонстрации практических навыков работы с базой данных (PostgreSQL/Supabase и Prisma), реализации аутентификации (NextAuth) и интеграции платёжного потока (Stripe). Проект показывает end‑to‑end флоу: создание/редактирование/удаление постов, управление правами доступа в зависимости от сессии и безопасную обработку webhook'ов после оплаты.
+### Demonstrates:
 
-Технологии и деплой
-- База данных: PostgreSQL (подключение через Supabase / DIRECT_URL).
-- ORM: Prisma — схема в prisma/schema.prisma, клиент генерируется через `prisma generate` и используется для всех операций с БД.
-- Аутентификация: NextAuth (сессии / токены), server‑side access control.  
-- Платёжный режим: Stripe (тестовый режим используется для демонстрации).
-- Frontend: React, Tailwind CSS, Next.js (App Router).
-- Деплой: Vercel (сборка и деплой приложения).
+* Database management using **PostgreSQL/Supabase and Prisma**
+* Authentication implementation using **NextAuth**
+* Payment flow integration using **Stripe**
+* End-to-end flow including post creation, editing, and deletion, session-based access control, and secure webhook handling after payment
 
-Ключевые возможности
-- Создание, редактирование и удаление постов.  
-- Фильтрация постов по категориям.  
-- Переход права владения постом на другого пользователя — только после успешной оплаты (Stripe Checkout + валидация webhook).  
-- Разделение прав и функций в зависимости от сессии (авторизованный/анонимный пользователь).
+### Technologies & Deployment
 
-Актуальный статус:
-- Обнаружены транзитивные уязвимости в dev‑зависимостях (в частности Hono через @prisma/dev).
+* **Database:** PostgreSQL (hosted on Supabase / `DIRECT_URL`)
+* **ORM:** Prisma — schema defined in `prisma/schema.prisma`; Prisma Client is generated using `prisma generate` and used for all database operations
+* **Authentication:** NextAuth (sessions/tokens) with server-side access control
+* **Payments:** Stripe (test mode is used for demonstration)
+* **Frontend:** React, Tailwind CSS, Next.js (App Router)
+* **Deployment:** Vercel (application build and deployment)
+
+### Key Features
+
+* Create, edit, and delete posts
+* Filter posts by category
+* Transfer post ownership to another user only after successful payment using **Stripe Checkout** and webhook validation
+* Different permissions and features based on the user's session (authenticated/unauthenticated)
+
 
 Дальнейшие шаги:
 - Устранение уязвимостей, создание unit и интеграционных тестов.
