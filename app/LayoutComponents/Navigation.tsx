@@ -1,7 +1,7 @@
-import SignInDropdown from "./SignInDropdown";
+import { SignInDropdown } from "./"
 import { NavigationButton } from "../SharedComponents/NavigationButton";
 
-export default function Navigation(){
+export function Navigation(){
     return (
         <nav className="flex items-center gap-3">
             <NavigationButton href="/posts" color = "white">

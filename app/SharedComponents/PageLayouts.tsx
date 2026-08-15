@@ -3,7 +3,7 @@ import { HeroLayoutProps} from "@/types/StyleTypes";
 
 export function HeroLayout({children, className}:HeroLayoutProps){
     return (
-        <div className={clsx("min-h-screen -mt-16", className)}>
+        <div className={clsx("min-h-screen -mt-16, pt-16", className)}>
             {children}
         </div>
     )

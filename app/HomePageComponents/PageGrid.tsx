@@ -7,5 +7,3 @@ export function PageGrid( { children } : { children : ReactNode }){
         </div>
     )
 }
-
-// className="flex items-center justify-center py-20"

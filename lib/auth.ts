@@ -18,7 +18,7 @@ export const authOptions: AuthOptions = {
         if (!user) return null;
         const ok = await compare(credentials.password, user.passwordHash || "");
         if (!ok) return null;
-        return {id: String(user.id)};
+        return {id: String(user.id), name: user.name, email: user.email};
       },
     }),
   ],

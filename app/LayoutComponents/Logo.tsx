@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-export default function Logo(){
+export function Logo(){
     return (
         <Link href="/" className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-indigo-600 to-indigo-500 text-white flex items-center justify-center font-bold">

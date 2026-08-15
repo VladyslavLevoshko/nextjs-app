@@ -1,6 +1,5 @@
 import "./globals.css";
-import Header from "./LayoutComponents/Header";
-import Footer from "./LayoutComponents/Footer";
+import { Header, Footer, LayoutBody } from "./LayoutComponents";
 import SessionProviderClient from "./providers/SessionProviderClient";
 import { Metadata } from "next";
 
@@ -15,13 +14,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ru">
-      <body className="bg-gray-50 text-gray-900 antialiased">
+      <LayoutBody>
         <SessionProviderClient>
           <Header/>
-          <main className="pt-16">{children}</main>
+          { children }
           <Footer/>
         </SessionProviderClient>
-      </body>
+      </LayoutBody>
     </html>
   );
 };

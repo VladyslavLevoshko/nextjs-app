@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ButtonProps } from "@/types/StyleTypes";
-import clsx from "clsx";
 
 const blueNavigationButtonStyle = "px-3 py-1.5 rounded-md bg-indigo-600 text-white text-sm font-medium shadow-sm hover:bg-indigo-700 transition";
 const whiteNavigationButtonStyle = "text-sm text-gray-700 hover:text-indigo-600";

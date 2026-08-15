@@ -1,8 +1,7 @@
-import Logo from "./Logo";
-import Navigation from "./Navigation";
+import { Logo, Navigation } from "./";
 import { Container } from "../SharedComponents/PageLayouts";
 
-export default function Header(){
+export function Header(){
     return (
           <header className="bg-white border-b border-gray-100 sticky top-0 z-40">
             <Container>

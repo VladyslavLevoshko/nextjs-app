@@ -1,7 +1,7 @@
 export function HomeHero(){
     return (
         <>
-                    <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight text-gray-900">
+        <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight text-gray-900">
               Платформа постов — покупайте, читайте и поддерживайте авторов
             </h1>
             <p className="text-lg text-gray-600 max-w-prose">
