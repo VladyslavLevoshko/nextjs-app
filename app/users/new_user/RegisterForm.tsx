@@ -1,57 +1,83 @@
 "use client";
-// ...existing code...
-import React, { useState } from "react";
+import React, { JSX, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import type { RegisterRequest } from "@/types/registerTypes";
+import { validateRegisterRequest } from "@/types/registerTypes";
 
-type FormState = {
-  name: string;
-  email: string;
-  password: string;
-  confirm: string;
+interface RegisterFormState extends RegisterRequest {
+  confirmedPass: string;
 };
 
-export default function RegisterForm() {
-  const router = useRouter();
-  const [form, setForm] = useState<FormState>({ name: "", email: "", password: "", confirm: "" });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState<string | null>(null);
+interface Errors extends Partial<RegisterFormState> {
+  apiErrors?: string;
+}
 
-  const validate = () => {
-    const e: Record<string, string> = {};
-    if (!form.name.trim()) e.name = "Введите имя";
-    if (!form.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) e.email = "Неверный email";
-    if (form.password.length < 8) e.password = "Пароль должен быть минимум 8 символов";
-    if (form.password !== form.confirm) e.confirm = "Пароли не совпадают";
-    setErrors(e);
-    return Object.keys(e).length === 0;
+export default function RegisterForm():JSX.Element {
+  const router = useRouter();
+  const [form, setForm] = useState<RegisterFormState>({ name: "", email: "", password: "", confirmedPass: ""});
+  const [errors, setErrors] = useState<Errors>({});
+  const [loading, setLoading] = useState<boolean>(false);
+  const [success, setSuccess] = useState<boolean>(false);
+
+  const validate = ():boolean => {
+    const validateErrors:Errors = {};
+    if (!form.name.trim()) validateErrors.name = "Введите имя";
+    if (!form.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) validateErrors.email = "Неверный email";
+    if (form.password.length < 8) validateErrors.password = "Пароль должен быть минимум 8 символов";
+    if (form.password !== form.confirmedPass) validateErrors.confirmedPass = "Пароли не совпадают";
+    setErrors(validateErrors);
+    return Object.keys(validateErrors).length === 0;
   };
 
-  const onChange = (k: keyof FormState) => (ev: React.ChangeEvent<HTMLInputElement>) =>
-    setForm((p) => ({ ...p, [k]: ev.target.value }));
 
-  const submit = async (ev: React.FormEvent) => {
-    ev.preventDefault();
-    setSuccess(null);
+  const onChange = function<KeyType extends keyof RegisterFormState>(
+    key:KeyType
+  ):React.ChangeEventHandler<HTMLInputElement> {
+    return function(event: React.ChangeEvent<HTMLInputElement>):void {
+      setForm((prev) => ({ ...prev, [key]: event.target.value }));
+    };
+  };
+
+  const submit = async function (event: React.FormEvent):Promise<void> {
+    event.preventDefault();
+    setSuccess(false);
     if (!validate()) return;
     setLoading(true);
     setErrors({});
     try {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: form.name, email: form.email, password: form.password }),
-      });
+      const {confirmedPass, ...rest} = form;
+      const request:unknown = rest;
 
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        setErrors({ form: data?.error || "Ошибка регистрации" });
+      if (!validateRegisterRequest(request)) {
+        setErrors({ apiErrors: "Некорректные данные" });
+        setLoading(false);
         return;
       }
 
-      setSuccess("Регистрация прошла успешно. Автоматический вход...");
-      // Авто-логин через next-auth (credentials provider должен быть настроен)
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(request),
+      });
+
+      if (!res.ok) {
+        const data:unknown = await res.json().catch(() => ({}));
+        if(
+          typeof data === "object" 
+          && data !== null 
+          && "error" in data 
+          && typeof data.error === "string"
+        ) {
+          setErrors({ apiErrors: data.error });
+          return;
+        } else {
+          setErrors({ apiErrors: "Сетевая ошибка" });
+          return;
+        }
+      };
+
+      setSuccess(true);
       try {
         const signRes = await signIn("credentials", {
           redirect: false,
@@ -62,7 +88,6 @@ export default function RegisterForm() {
         if (signRes && (signRes as any).ok) {
           router.push("/users/success");
         } else {
-          // если логин не прошёл — редирект на страницу входа
           router.push("/users/sign_in");
         }
       } catch (err) {
@@ -71,7 +96,7 @@ export default function RegisterForm() {
       }
     } catch (err) {
       console.error(err);
-      setErrors({ form: "Сетевая ошибка" });
+      setErrors({ apiErrors: "Сетевая ошибка" });
     } finally {
       setLoading(false);
     }
@@ -147,19 +172,19 @@ export default function RegisterForm() {
             <input
               id="confirm"
               type="password"
-              value={form.confirm}
-              onChange={onChange("confirm")}
+              value={form.confirmedPass}
+              onChange={onChange("confirmedPass")}
               className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 ${
-                errors.confirm ? "border-red-300" : "border-gray-200"
+                errors.confirmedPass ? "border-red-300" : "border-gray-200"
               }`}
               placeholder="Повторите пароль"
-              aria-invalid={!!errors.confirm}
-              aria-describedby={errors.confirm ? "confirm-error" : undefined}
+              aria-invalid={!!errors.confirmedPass}
+              aria-describedby={errors.confirmedPass ? "confirm-error" : undefined}
             />
-            {errors.confirm && <p id="confirm-error" className="mt-1 text-xs text-red-600">{errors.confirm}</p>}
+            {errors.confirmedPass && <p id="confirm-error" className="mt-1 text-xs text-red-600">{errors.confirmedPass}</p>}
           </div>
 
-          {errors.form && <div className="text-xs text-red-600">{errors.form}</div>}
+          {errors.apiErrors && <div className="text-xs text-red-600">{errors.apiErrors}</div>}
 
           <button
             type="submit"
@@ -177,7 +202,7 @@ export default function RegisterForm() {
 
       {success && (
         <div className="mt-4 p-3 rounded-md bg-emerald-50 border border-emerald-100 text-emerald-700 text-sm">
-          {success}
+          {"Регистрация прошла успешно. Автоматический вход..."}
         </div>
       )}
     </div>

@@ -3,9 +3,10 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 
-export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const postId = parseInt(id, 10);
+import { validatePatchBody } from "@/types/registerTypes";
+
+export async function DELETE(_request: Request, { params }: { params: Promise <{ id: string }> }) {
+  const postId = Number((await params).id)
   if (Number.isNaN(postId)) return NextResponse.json({ error: "Invalid id" }, { status: 400 });
 
   const session = await getServerSession(authOptions);
@@ -14,7 +15,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
   const post = await prisma.post.findUnique({ where: { id: postId } });
   if (!post) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  if (String((session.user as any).id) !== String(post.authorId)) {
+  if (session.user.id !== String(post.authorId)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
@@ -22,7 +23,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
   return NextResponse.json({ ok: true });
 }
 
-export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function PATCH(request: Request, { params }: { params:Promise < { id: string } > }) {
   const { id } = await params;
   const postId = parseInt(id, 10);
   if (Number.isNaN(postId)) return NextResponse.json({ error: "Invalid id" }, { status: 400 });
@@ -33,13 +34,16 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   const post = await prisma.post.findUnique({ where: { id: postId } });
   if (!post) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  if (String((session.user as any).id) !== String(post.authorId)) {
+  if (session.user.id !== String(post.authorId)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const body = await request.json().catch(() => ({}));
+  const body: unknown = await request.json().catch(() => ({}));
+  if (!validatePatchBody(body)) {
+    return NextResponse.json({ error: "Invalid input" }, { status: 422 });
+  };
+
   const { title, content } = body;
-  if (!title && !content) return NextResponse.json({ error: "Nothing to update" }, { status: 400 });
 
   const updated = await prisma.post.update({
     where: { id: postId },

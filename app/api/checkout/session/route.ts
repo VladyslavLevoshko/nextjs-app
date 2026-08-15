@@ -1,4 +1,3 @@
-// ...existing code...
 import Stripe from "stripe";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -23,7 +22,6 @@ export async function POST(request: Request) {
     const currentUserID = Number(((serverSession.user as any)?.id) ?? "");
 
     if (Number(amount) === 0) {
-      // For free posts, skip Stripe and return a success response directly
       const post = await prisma.post.findUnique({ where: { id: Number(postId) } });
       if (!post) {
         return new Response(JSON.stringify({ error: "Post not found" }), { status: 404 });

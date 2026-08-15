@@ -1,4 +1,3 @@
-// ...existing code...
 import Stripe from "stripe";
 import prisma from "@/lib/prisma";
 
@@ -40,20 +39,6 @@ export async function POST(request: Request) {
         return new Response(JSON.stringify({ received: true }), { status: 200 });
       }
 
-      // Найти или создать пользователя
-      let user = await prisma.user.findUnique({ where: { id: userId } });
-      if (!user) {
-        const defaultName = buyerEmail.split("@")[0];
-        user = await prisma.user.create({
-          data: {
-            email: buyerEmail,
-            name: defaultName,
-          },
-        });
-        console.log("Created user for buyer:", user.id, buyerEmail);
-      }
-
-      // Обновить пост: передать право владения (authorId) новому пользователю
       const post = await prisma.post.findUnique({ where: { id: postId } });
       if (!post) {
         console.warn("Webhook: post not found", postId);
@@ -71,9 +56,5 @@ export async function POST(request: Request) {
   } catch (err) {
     console.error("Error handling stripe webhook:", err);
     return new Response(`Handler error: ${(err as Error).message}`, { status: 500 });
-  } finally {
-    // опционально: при долгоживущих процессах закрываем prisma
-    // await prisma.$disconnect();
-  }
-}
-// ...existing code...
+  };
+};

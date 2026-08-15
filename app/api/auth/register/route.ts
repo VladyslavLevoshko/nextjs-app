@@ -1,23 +1,28 @@
 import prisma from "@/lib/prisma";
 import { hash } from "bcrypt";
 import { NextResponse } from "next/server";
+import { validateRegisterRequest } from "../../../../types/registerTypes";
+import type { RegisterRequest } from "../../../../types/registerTypes";
+import type { User } from "@prisma/client";
 
-export async function POST(req: Request) {
+export async function POST(req: Request): Promise<NextResponse<{ id: number } | { error: string }>> {
   try {
-    const { email, password, name } = await req.json();
+    const body:unknown = await req.json();
 
-    if (!email || !password) {
-      return NextResponse.json({ error: "Missing email or password" }, { status: 400 });
+    if (!validateRegisterRequest(body)) {
+      return NextResponse.json({ error: "Invalid input" }, { status: 422 });
     }
 
-    const existing = await prisma.user.findUnique({ where: { email } });
+    const { email, password, name }:RegisterRequest = body;
+
+    const existing:User | null = await prisma.user.findUnique({ where: { email } });
     if (existing) {
       return NextResponse.json({ error: "User already exists" }, { status: 409 });
     }
 
-    const passwordHash = await hash(password, 10);
+    const passwordHash:string = await hash(password, 10);
 
-    const user = await prisma.user.create({
+    const user:User = await prisma.user.create({
       data: {
         email,
         name,
@@ -25,7 +30,7 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json({ id: user.id, email: user.email }, { status: 201 });
+    return NextResponse.json({ id: user.id }, { status: 201 });
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
