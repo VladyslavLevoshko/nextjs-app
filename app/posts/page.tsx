@@ -31,7 +31,7 @@ export default async function PostsPage({ searchParams }: Props) {
   const totalPages = Math.ceil(total / perPage);
 
   return (
-    <HeroLayout className="bg-gray-50 py-10">
+    <HeroLayout color = "gray">
       <Container>
         <header className="mb-8 flex items-center justify-between">
           <div>

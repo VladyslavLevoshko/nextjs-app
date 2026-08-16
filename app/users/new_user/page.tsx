@@ -1,5 +1,4 @@
-// ...existing code...
-import RegisterForm from "./RegisterForm";
+import RegisterForm from "../UsersComponents/RegisterForm";
 
 export const metadata = {
   title: "Регистрация",
@@ -31,4 +30,3 @@ export default function RegisterPage() {
     </div>
   );
 }
-// ...existing code...

@@ -1,16 +1,16 @@
-// ...existing code...
 "use client";
 import Link from "next/link";
 
-export default function UserCard({
+export function UserCard({
   id,
   name,
   email,
 }: {
   id: string;
   name: string;
-  email?: string | null;
+  email: string;
 }) {
+  
   return (
     <article className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition">
       <div className="p-4">
@@ -39,4 +39,3 @@ export default function UserCard({
     </article>
   );
 }
-// ...existing code...
