@@ -2,13 +2,14 @@ import Stripe from "stripe";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { CheckoutInfo } from "@/app/posts/[id]/BuyButton";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { postId, title, amount, buyerEmail } = body;
+    const { postId, title, price} : CheckoutInfo = body;
     const serverSession = await getServerSession(authOptions);
 
     if (!postId) {
@@ -17,16 +18,15 @@ export async function POST(request: Request) {
     if (!serverSession) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
     }
-
+    
     const currentUserID = Number(((serverSession.user as any)?.id) ?? "");
 
-    if (Number(amount) === 0) {
+    if (price === 0) {
       const post = await prisma.post.findUnique({ where: { id: Number(postId) } });
 
       if (!post) {
         return new Response(JSON.stringify({ error: "Post not found" }), { status: 404 });
       }
-      
       await prisma.post.update({
         where: { id: Number(postId) },
         data: { authorId: currentUserID },
@@ -46,13 +46,12 @@ export async function POST(request: Request) {
           price_data: {
             currency: process.env.STRIPE_CURRENCY ?? "usd",
             product_data: { name: title ?? `Post ${postId}` },
-            unit_amount: Math.round(Number(amount) * 100),
+            unit_amount: Math.round(price * 100),
           },
           quantity: 1,
         },
       ],
       metadata: { postId: String(postId), userId: currentUserID },
-      customer_email: buyerEmail,
       success_url: `${process.env.NEXTAUTH_URL}/posts/${postId}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXTAUTH_URL}/posts/${postId}/cancel`,
     });

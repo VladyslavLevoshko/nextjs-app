@@ -72,7 +72,7 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
                     <DeleteButton id={post.id} />
                   </>
                 ) : (
-                  <BuyButton postId={post.id} title={post.title} price={post.price ?? 5} />
+                  <BuyButton postId={post.id} title={post.title} price={post.price} />
                 )}
               </div>
             </div>
