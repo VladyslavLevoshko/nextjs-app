@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 export type HeroLayoutProps = {
     children: ReactNode,
-    className?: string
+    color?: "white" | "gray"
 }
 
 export type ButtonProps = {

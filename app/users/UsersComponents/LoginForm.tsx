@@ -1,4 +1,3 @@
-// ...existing code...
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -35,7 +34,6 @@ export default function LoginForm() {
     setLoading(true);
 
     try {
-      // Используем next-auth signIn с credentials
       const res = await signIn("credentials", {
         redirect: false,
         email: form.email,
@@ -55,7 +53,6 @@ export default function LoginForm() {
         return;
       }
 
-      // Успешный вход
       router.push((res as any).url ?? "/");
     } catch (err) {
       setServerError("Сетевая ошибка, попробуйте позже");

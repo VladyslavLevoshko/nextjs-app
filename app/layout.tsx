@@ -1,6 +1,6 @@
 import "./globals.css";
 import { Header, Footer, LayoutBody } from "./LayoutComponents";
-import SessionProviderClient from "./providers/SessionProviderClient";
+import SessionProviderClient from "./LayoutComponents/providers/SessionProviderClient";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

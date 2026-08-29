@@ -20,23 +20,24 @@ export default function HomePage() {
   return (
     <HeroLayout >
       <Container>
-
         <PageGrid>
 
           <LeftSection>
             <HomeHero/>
+
             <LeftSectionButtons>
               <WatchPostsButton />
               <CreateAccountButton />
             </LeftSectionButtons>
+
             <FeaturesSection/>
           </LeftSection>
 
           <RightBlock>
             <PopularCategoriesSection/>
           </RightBlock>
+          
         </PageGrid>
-
       </Container>
     </HeroLayout>
   );

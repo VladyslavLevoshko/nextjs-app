@@ -1,4 +1,3 @@
-// ...existing code...
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -113,4 +112,3 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
     </div>
   );
 }
-// ...existing code...
