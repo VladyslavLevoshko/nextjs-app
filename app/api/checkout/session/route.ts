@@ -2,14 +2,14 @@ import Stripe from "stripe";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { CheckoutInfo } from "@/app/posts/[id]/BuyButton";
+import { StripeCheckoutInfo } from "@/types"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-export async function POST(request: Request) {
+export async function POST( request: Request ) {
   try {
     const body = await request.json();
-    const { postId, title, price} : CheckoutInfo = body;
+    const { postId, title, price} : StripeCheckoutInfo = body;
     const serverSession = await getServerSession(authOptions);
 
     if (!postId) {
@@ -19,7 +19,7 @@ export async function POST(request: Request) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
     }
     
-    const currentUserID = Number(((serverSession.user as any)?.id) ?? "");
+    const currentUserID = Number(serverSession.user.id);
 
     if (price === 0) {
       const post = await prisma.post.findUnique({ where: { id: Number(postId) } });
@@ -27,8 +27,9 @@ export async function POST(request: Request) {
       if (!post) {
         return new Response(JSON.stringify({ error: "Post not found" }), { status: 404 });
       }
+
       await prisma.post.update({
-        where: { id: Number(postId) },
+        where: { id: postId },
         data: { authorId: currentUserID },
       });
 
@@ -39,8 +40,8 @@ export async function POST(request: Request) {
     }
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
       mode: "payment",
+      customer_email: serverSession.user.email,
       line_items: [
         {
           price_data: {
@@ -60,6 +61,7 @@ export async function POST(request: Request) {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
+    
   } catch (err) {
     return new Response(JSON.stringify({ error: (err as Error).message }), { status: 500 });
   }
