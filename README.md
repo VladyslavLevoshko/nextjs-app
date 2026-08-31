@@ -21,10 +21,6 @@
 * Transfer post ownership to another user only after successful payment using **Stripe Checkout** and webhook validation
 * Different permissions and features based on the user's session (authenticated/unauthenticated)
 
-
-Дальнейшие шаги:
-- Устранение уязвимостей, создание unit и интеграционных тестов.
-
-Ссылка на сайт: 
+Link to site:
 https://nextjs-app-wine-six.vercel.app/
 
